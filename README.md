@@ -5,5 +5,7 @@
 3. activar hypervisor en el bios
 
 
-CORRAN ESTE COMANDO EN GIT BASH
-````git clone https://github.com/jcroyoaun/observability-cloud-native-dockercompose.git```
+CORRAN ESTE COMANDO EN GIT BASH :
+
+
+git clone https://github.com/jcroyoaun/observability-cloud-native-dockercompose.git
