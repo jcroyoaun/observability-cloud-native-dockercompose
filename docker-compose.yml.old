@@ -1,0 +1,40 @@
+version: '3.9'
+
+volumes:
+    db_data: {}
+
+services:
+  users-db-postgres:
+    image: postgres
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD="docker"
+      - PGDATA="/var/lib/postgresql/data/some_name/"
+    ports:
+      - 5432:5432
+    networks:
+      - users-system-network
+    restart: always
+    deploy:
+      mode: global
+      
+  user-api:
+    image: user-api
+    ports:
+      - 8000:8000
+    networks:
+      - users-system-network
+    restart: always
+    deploy:
+      mode: global
+
+networks:
+  users-system-network:
+    driver: bridge
+    ipam:
+        driver: default
+        config:
+          - subnet: 182.18.0.1/24
+            gateway: 182.18.0.1
+    name: users-system-network
