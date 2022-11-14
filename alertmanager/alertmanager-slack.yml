@@ -1,0 +1,8 @@
+route:
+  receiver: admin
+
+receivers:
+- name: admin
+  slack_configs:
+  - channel: '#prometheus'
+    api_url: 'https://hooks.slack.com/services/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'

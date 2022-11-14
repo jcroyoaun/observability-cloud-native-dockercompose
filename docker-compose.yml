@@ -1,0 +1,90 @@
+version: '3.9'
+
+volumes:
+    db_data: {}
+    prometheus_data: {}
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - 9090:9090
+    networks:
+      - users-system-network
+    restart: always
+    deploy:
+      mode: global
+
+  users-db-postgres:
+    image: postgres
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=docker
+      - PGDATA="/var/lib/postgresql/data/some_name/"
+    ports:
+      - 5432:5432
+    networks:
+      - users-system-network
+    restart: always
+    deploy:
+      mode: global
+
+  user-api:
+    image: user-api
+    hostname: user-api
+    platform: linux/amd64
+    ports:
+      - 8000-8001:8000-8001
+    networks:
+      - users-system-network
+    depends_on:
+      - "users-db-postgres"
+    restart: always
+    deploy:
+      mode: global
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - 9100:9100
+    networks:
+      - users-system-network 
+    restart: always
+    deploy:
+      mode: global
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--cluster.advertise-address=182.18.0.4:9093'
+    networks:
+      - users-system-network 
+    restart: always
+    deploy:
+      mode: global
+
+networks:
+  users-system-network:
+    driver: bridge
+    ipam:
+        driver: default
+        config:
+          - subnet: 182.18.0.1/24
+            gateway: 182.18.0.1
+    name: users-system-network
