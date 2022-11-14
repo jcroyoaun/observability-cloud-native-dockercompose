@@ -1,5 +1,5 @@
-# user-api
-This is a repository for creating an API to perform CRUD actions on users for a Grid Dynamics internship project. Project is based on https://www.youtube.com/watch?v=GN6ICac3OXY
+# user-api + Observability
+This is a project that integrates monitoring Prometheus + FastAPI backend with Docker containers.
 
 # Version history 
 * v0.0 - Application from tutorial (https://www.youtube.com/watch?v=GN6ICac3OXY)
@@ -27,5 +27,4 @@ From the directory where project was cloned :
 
 docker pull jcroyoaun/user-api:latest
 docker compose up -d
-
 

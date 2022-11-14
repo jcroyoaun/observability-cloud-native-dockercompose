@@ -57,10 +57,10 @@ async def delete_user(user_id: int, db: Session = Depends(get_db)):
             db.delete(user)
             db.commit()
             return { f"user with id: {user_id} was deleted" }
+
     raise HTTPException(
         status_code=404,
         detail=f"user with id: {user_id} does not exist"
     )
-
   
 # @app.put("/api/v1/users/{user_id}")
